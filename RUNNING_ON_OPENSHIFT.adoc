@@ -197,7 +197,8 @@ The `s2i` section under `build` can be used to choose the parts of the server we
 ----
 build:
   s2i:
-    galleonLayers: cloud-server
+    galleonLayers:
+      - cloud-server
 ----
 
 The `galleonLayers` entry contains a list of the Galleon layers we want our server to install. If not specified, a full server is provisioned.
@@ -210,7 +211,7 @@ Links:
 
 Quickstarts:
 
-* link:../postgres/[postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
 === Adding Galleon feature packs
 You may wish to add to the functionality to the server by implementing a Galleon Feature Pack. A likely more common scenario is to use the EAP datasources feature pack to add modules and configuration to configure database drivers and datasources.
@@ -221,7 +222,9 @@ build:
   s2i:
     featurePacks:
       - org.jboss.eap:eap-datasources-galleon-pack:7.4.0.GA-redhat-00003
-    galleonLayers: cloud-server,postgresql-datasource
+    galleonLayers:
+      - cloud-server
+      - postgresql-datasource
 ----
 
 The `featurePacks` entry adds `org.jboss.eap:eap-datasources-galleon-pack:7.4.0.GA-redhat-00003` as a feature pack. Since the core server is unaware of the full list of layers in this feature pack, we need to specify the layers to provision in  `galleonLayers` as outlined in <<_trimming_the_provisioned_server>>. In this case `cloud-server` comes from the core server, and `postgresql-datasource` comes from our added feature pack.
@@ -236,7 +239,7 @@ Links:
 
 Quickstarts:
 
-* link:../postgres/[postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
 === Selecting the number of application pods
 
@@ -403,7 +406,7 @@ VGhpcyBpcyBmcm9tIHNlY3JldCBB
 
 Quickstarts:
 
-* link:./postgres[postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
 
 ==== Mapping individual values from a ConfigMap/Secret to environment variables
