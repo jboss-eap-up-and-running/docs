@@ -188,7 +188,7 @@ Links:
 
 Quickstarts:
 
-* link:../postgres/[postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
 === Trimming the provisioned server
 The `s2i` section under `build` can be used to choose the parts of the server we want to provision. This can have the effect of drastically shrinking the image.
@@ -330,7 +330,7 @@ The above example CLI script simply adds  a system property called `added-by-pos
 
 Quickstarts:
 
-* link:./rhosak/[rhosak]
+* https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
 
 === Adding files to the application image
@@ -436,7 +436,7 @@ It also sets an environment variable in the `deploy` section called `ENV_VAR_FRO
 
 Quickstarts:
 
-* link:./postgres[postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
 ==== Mapping all values from a ConfigMap/Secret to environment variables
 TODO
@@ -482,7 +482,7 @@ Now our application pods can read values from the indicated files. This is espec
 
 Quickstarts:
 
-* link:./rhosak/[rhosak]
+* https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
 
 ==== Mapping entries from a mounted directory via the MicroProfile Config subsystem
@@ -519,7 +519,7 @@ the field `secretBValue` will be populated with 'From secret B' which is the bas
 
 Quickstarts:
 
-* link:./rhosak/[rhosak]
+* https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
 === Configuring logging
 TODO
