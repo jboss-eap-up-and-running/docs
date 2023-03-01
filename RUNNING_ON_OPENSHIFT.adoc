@@ -1,5 +1,6 @@
 :openshiftVersion: 4.11
 
+[#running_on_openshift]
 = Running the quickstarts on OpenShift
 
 In all cases, the Java code for the quickstart remains the same. For this iteration of the quickstarts, we use Helm to configure, build and deploy the application. Previous versions of the quickstarts used templates, now Helm is the preferred mechanism since it is lot easier to use.
@@ -10,6 +11,7 @@ In all cases, the Java code for the quickstart remains the same. For this iterat
 
 We will first look at deploying an application, and then look at ways to configure an application.
 
+[#deploying_on_openshift]
 == Deploying a quickstart on Openshift
 At a high level, to deploy a quickstart to OpenShift, we need to:
 
@@ -19,6 +21,7 @@ At a high level, to deploy a quickstart to OpenShift, we need to:
 
 The next sections will go through these steps in more detail.
 
+[#prerequisites]
 === Prerequisites
 * Log in to your Openshift instance via the console
 * Install oc CLI for OpenShift:
@@ -35,6 +38,7 @@ Links to further information:
 * https://access.redhat.com/documentation/en-us/openshift_container_platform/{openshiftVersion}/html/cli_tools/openshift-cli-oc[OpenShift CLI (oc)]
 * https://access.redhat.com/documentation/en-us/openshift_container_platform/{openshiftVersion}/html/building_applications/working-with-helm-charts[Working with Helm Charts]
 
+[#selecting_creating_a_project]
 === Selecting/creating a project
 
 An OpenShift project is just a namespace, which contains a collection of Openshift resources. OpenShift resources are things like:
@@ -71,6 +75,7 @@ Links to further information:
 
 * https://access.redhat.com/documentation/en-us/openshift_container_platform/{openshiftVersion}/html/cli_tools/openshift-cli-oc#cli-using-cli_cli-developer-commands[Using the OpenShift CLI]
 
+[#introduction_to_helm_charts]
 === Introduction to Helm charts
 All quickstarts will have a yaml file, known as a Helm chart, used to deploy the application with Helm. Generally this will be in `charts/helm.yaml` under each quickstart's directory. In some cases quickstarts will contain more than one to cover different cases. In this case the quickstart will point out the differences in the configuration between the files.
 
@@ -92,16 +97,17 @@ A simple `charts/helm.yaml` is shown below.
 build:
   uri: https://github.com/kabir/eap-openshift-quickstarts-wip
   ref: main
-  contextDir: helloworld
 deploy:
   replicas: 4
 ----
-We will explain the contents of this in more detail in the <<_deploying_with_helm>> section. For now, the shown Helm chart contains two top level sections:
+We will explain the contents of this in more detail in the <<deploying_with_helm>> section. For now, the shown Helm chart contains two top level sections:
 
 * deploy - contains settings used to build application, and the runtime image containing it
 * build - contains settings affecting the pod(s) running the application
 
-In this case we are specifying the Git repository containing the application, the branch to use, and that we want to use the `helloworld` directory inside that for our application. In the `deploy` section, we are specifying that we want 4 pods running the application.
+In this case we are specifying the Git repository containing the application, and the branch to use.
+
+In the `deploy` section, we are specifying that we want 4 pods running the application.
 
 All other values come from the https://github.com/jbossas/eap-charts/blob/main/charts/eap74/values.yaml file.
 
@@ -112,6 +118,7 @@ If you would like to see all the configuration elements to customize your deploy
 helm show readme jboss-eap/eap74
 ----
 
+[#deploying_with_helm]
 === Deploying with Helm
 To install the application into OpenShift, go to the directory containing the quickstart and run:
 [source,shell]
@@ -138,6 +145,7 @@ Links:
 
 * https://docs.openshift.com/container-platform/4.11/nodes/pods/nodes-pods-viewing.html[Viewing pods in a project]
 
+[#route_of_application]
 ==== Getting the route of the application
 To get the URL of the route to the application, you can run:
 [source,shell]
@@ -145,6 +153,7 @@ To get the URL of the route to the application, you can run:
 oc get route my-qs -o jsonpath="{.spec.host}"
 ----
 
+[#uninstalling_application]
 ==== Uninstalling the application
 
 To uninstall the application, run:
@@ -153,11 +162,13 @@ To uninstall the application, run:
 helm uninstall my-app
 ----
 
+[#configuring_application]
 == Configuring the Application
 In this section, we will cover typical ways to configure your application with Helm, and with other mechanisms such as the CLI. Each example will link to a quickstart where this approach is used (if such a quickstart exists), and conversely the individual quickstarts will link to the sections here in order to elaborate on the underlying concept.
 
 We will use minimal examples, just showing the yaml from the Helm chart for what is needed specifically to enable the configuration being shown. To see a fuller example,  see the Helm Chart in the indicated quickstart.
 
+[#setting_env_vars]
 === Setting environment variables
 
 Environment variables are a widely used way to configure applications on the cloud. We can specify this in our Helm chart
@@ -190,6 +201,7 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
+[#trimming_server]
 === Trimming the provisioned server
 The `s2i` section under `build` can be used to choose the parts of the server we want to provision. This can have the effect of drastically shrinking the image.
 
@@ -213,6 +225,7 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
+[#adding_galleon_feature_packs]
 === Adding Galleon feature packs
 You may wish to add to the functionality to the server by implementing a Galleon Feature Pack. A likely more common scenario is to use the EAP datasources feature pack to add modules and configuration to configure database drivers and datasources.
 
@@ -227,7 +240,7 @@ build:
       - postgresql-datasource
 ----
 
-The `featurePacks` entry adds `org.jboss.eap:eap-datasources-galleon-pack:7.4.0.GA-redhat-00003` as a feature pack. Since the core server is unaware of the full list of layers in this feature pack, we need to specify the layers to provision in  `galleonLayers` as outlined in <<_trimming_the_provisioned_server>>. In this case `cloud-server` comes from the core server, and `postgresql-datasource` comes from our added feature pack.
+The `featurePacks` entry adds `org.jboss.eap:eap-datasources-galleon-pack:7.4.0.GA-redhat-00003` as a feature pack. Since the core server is unaware of the full list of layers in this feature pack, we need to specify the layers to provision in  `galleonLayers` as outlined in <<trimming_server>>. In this case `cloud-server` comes from the core server, and `postgresql-datasource` comes from our added feature pack.
 
 Links:
 
@@ -241,6 +254,7 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
+[#selecting_number_pods]
 === Selecting the number of application pods
 
 [source,shell]
@@ -250,6 +264,7 @@ deploy:
 ----
 Unless specified, one application pod will be created by default when doing `helm install`. In the shown example, two will be created instead.
 
+[#using_cli_scripts]
 === Using CLI scripts
 CLI scripts are useful for configuring the application server management model before the server is booted. Note that as containers are inherently stateless, configuration changes from added CLI scripts only take effect during the life of the server.
 
@@ -332,13 +347,14 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
-
+[#adding_files_to_image]
 === Adding files to the application image
 It can be useful to add files containing static content, keystores and other things to the image containing the server.
 
 The steps to do this are the same as when copying the CLI script into the server image, except of course we don’t invoke the CLI script and the `postconfigure.sh` file may choose a different target location within the server image.
 
 
+[#config_maps_and_secrets]
 === Using ConfigMaps and Secrets
 There are a few ways you can use values from ConfigMaps and secrets in your applications. But first we need to add a ConfigMap/secret to OpenShift! This is independent of calling `helm install`, and in most cases we need to add the ConfigMap/secret before installing the application since the application will be using values from the ConfigMap/secret.
 
@@ -350,6 +366,7 @@ Links:
 * https://docs.openshift.com/container-platform/4.11////nodes/pods/nodes-pods-configmaps.html
 * https://docs.openshift.com/container-platform/4.11////nodes/pods/nodes-pods-secrets.html#nodes-pods-secrets-about_nodes-pods-secrets[Understanding secrets]
 
+[#adding_config_map]
 ==== Adding a ConfigMap to OpenShift
 We have the following YAML stored as `my-config-map.yaml`:
 [source,yaml]
@@ -371,6 +388,7 @@ oc apply -f my-config-map.yaml
 
 This results in a ConfigMap called `my-config-map` with the entries `cmPropertyA` and `config.map.propertyB`.
 
+[#adding_secret]
 ==== Adding a Secret to OpenShift
 We have the following YAML stored as `my-secret.yaml`:
 [source,yaml]
@@ -408,7 +426,7 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
-
+[#mapping_single_configmap_secret_values_to_env_vars]
 ==== Mapping individual values from a ConfigMap/Secret to environment variables
 In some cases we might just be interested in a handful of entries from the ConfigMap or secret, and want to map them to an environment variable.
 
@@ -430,17 +448,19 @@ deploy:
           name: my-secret
 ----
 
-The above snippet sets an environment variable in the `build` section called `ENV_VAR_FROM_CONFIG_MAP`. This is configured to read the `cmPropertyA` value from the `my-config-map` ConfigMap that we created <<_adding_a_configmap_to_openshift, earlier>>. Thus `ENV_VAR_FROM_CONFIG_MAP` will have the value `From config map A`.
+The above snippet sets an environment variable in the `build` section called `ENV_VAR_FROM_CONFIG_MAP`. This is configured to read the `cmPropertyA` value from the `my-config-map` ConfigMap that we created <<adding_config_map, earlier>>. Thus `ENV_VAR_FROM_CONFIG_MAP` will have the value `From config map A`.
 
-It also sets an environment variable in the `deploy` section called `ENV_VAR_FROM_SECRET`. This is configured to read the `secretPropertyA` value from the `my-secret` secret we created <<_adding_a_secret_to_openshift, earlier>>. Thus `ENV_VAR_FROM_SECRET` will have the value `This is from secret A`.
+It also sets an environment variable in the `deploy` section called `ENV_VAR_FROM_SECRET`. This is configured to read the `secretPropertyA` value from the `my-secret` secret we created <<adding_secret, earlier>>. Thus `ENV_VAR_FROM_SECRET` will have the value `This is from secret A`.
 
 Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
 
+[#mapping_all_configmap_secret_values_to_env_vars]
 ==== Mapping all values from a ConfigMap/Secret to environment variables
 TODO
 
+[#mapping_configmap_secret_values_to_directory]
 ==== Mapping entries from a ConfigMap/Secret to files in a mounted directory
 OpenShift allows you to mount configmaps and secrets as a directory where each entry becomes a file. The name of the file is the name of the entry, and the contents of each file is the value of the entry.
 
@@ -466,32 +486,32 @@ deploy:
 
 Here we are creating two `volumes` entries:
 
-* `secret-volume` - mounts the secret `my-config-map` which we created <<_adding_a_configmap_to_openshift,earlier>>.
-* `secret-volume` - mounts the secret `my-secret` which we created <<_adding_a_secret_to_openshift,earlier>>
+* `secret-volume` - mounts the secret `my-config-map` which we created <<adding_config_map,earlier>>.
+* `secret-volume` - mounts the secret `my-secret` which we created <<adding_secret,earlier>>
 
 Then we tell it to create two `volumeMounts` entries each referencing a volume:
 
-* `configmap-volume` - this references the `configmap-volume` volume, and maps it under `/etc/config/from-configmap`. Using the <<_adding_a_configmap_to_openshift,earlier configmap>>, the result will be two files in the application pod:
+* `configmap-volume` - this references the `configmap-volume` volume, and maps it under `/etc/config/from-configmap`. Using the <<adding_config_map,earlier configmap>>, the result will be two files in the application pod:
 ** `/etc/config/from-configmap/cmPropertyA` - containing `From config map A`
 ** `/etc/config/from-configmapf/config.map.propertyB` - containing `From config map B`
-* `secret-volume` - this references the `secret-volume` volume, and maps it under `/etc/config/from-secret`. Using the <<#_adding_a_secret_to_openshift,earlier secret>>, the result will be two files in the application pod:
+* `secret-volume` - this references the `secret-volume` volume, and maps it under `/etc/config/from-secret`. Using the <<adding_secret,earlier secret>>, the result will be two files in the application pod:
 ** `/etc/config/from-secret/secretPropertyA` - containing `VGhpcyBpcyBmcm9tIHNlY3JldCBB`, which is 'This is from secret A' encoded with base64.
 ** `/etc/config/from-secret/secret.propertyB` - containing `RnJvbSBzZWNyZXQgQg==`, which is 'From secret B' encoded with base64
 
-Now our application pods can read values from the indicated files. This is especially useful in conjunction with <<Mapping entries from a ConfigMap/Secret to files in a mounted directory>>
+Now our application pods can read values from the indicated files. This is especially useful in conjunction with <<mapping_entries_from_directory_via_mp_config>>
 
 Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
-
+[#mapping_entries_from_directory_via_mp_config]
 ==== Mapping entries from a mounted directory via the MicroProfile Config subsystem
 
 If we have a directory containing files from a secret or a configmap, we can create an entry in the MicroProfile Config subsystem to make them easier available to our application via MicroProfile Config. **Note:** This is an EAP XP 4 feature only, and is not available in vanilla JBoss EAP 7.4.z.
 
-To do this, we need to add a CLI script. See <<Using CLI scripts, here>> for how to add a CLI script to adjust the configuration of the server before OpenShift boots it up. The script we will use for this example differs from the earlier script.
+To do this, we need to add a CLI script. See <<using_cli_scripts, here>> for how to add a CLI script to adjust the configuration of the server before OpenShift boots it up. The script we will use for this example differs from the earlier script.
 
-Using the <<Mapping entries from a ConfigMap/Secret to files in a mounted directory,secret from earlier>>, we can provide the server with the following CLI script:
+Using the <<mapping_configmap_secret_values_to_directory,secret from earlier>>, we can provide the server with the following CLI script:
 
 [source]
 ----
@@ -521,5 +541,6 @@ Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
+[#configuring_logging]
 === Configuring logging
 TODO
