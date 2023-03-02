@@ -200,6 +200,8 @@ Links:
 Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-remote-messaging-broker[eap7-with-remote-messaging-broker]
+* https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
 
 [#trimming_server]
 === Trimming the provisioned server
@@ -224,6 +226,8 @@ Links:
 Quickstarts:
 
 * https://github.com/jboss-eap-up-and-running/eap7-with-postgres[eap7-with-postgres]
+* https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
+
 
 [#adding_galleon_feature_packs]
 === Adding Galleon feature packs
@@ -345,7 +349,9 @@ The above example CLI script simply adds  a system property called `added-by-pos
 
 Quickstarts:
 
+* https://github.com/jboss-eap-up-and-running/eap7-with-remote-messaging-broker[eap7-with-remote-messaging-broker]
 * https://github.com/jboss-eap-up-and-running/eap7-with-rhosak[eap7-with-rhosak]
+
 
 [#adding_files_to_image]
 === Adding files to the application image
